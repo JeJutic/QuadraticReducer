@@ -5,7 +5,7 @@ import org.panart.formatting.Formatable;
 import java.util.Comparator;
 import java.util.Objects;
 
-public class Term implements Algebra<Term>, Formatable, Comparable<Term> {
+public class Term implements Algebra<Term>, MultiplyGroup<Term>, Formatable, Comparable<Term> {
 
     final double coef;
     BasicTerm basicTerm; // "final", package-private for formatter
@@ -26,6 +26,11 @@ public class Term implements Algebra<Term>, Formatable, Comparable<Term> {
     @Override
     public Term multiply(Term o) {
         return new Term(basicTerm.multiply(o.basicTerm), coef * o.coef);
+    }
+
+    @Override
+    public Term revert() {
+        return new Term(basicTerm.revert(), 1 / coef);
     }
 
     @Override

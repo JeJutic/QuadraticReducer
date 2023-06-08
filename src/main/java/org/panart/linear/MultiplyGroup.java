@@ -1,6 +1,6 @@
 package org.panart.linear;
 
-public interface MultiplyGroup<T> {
+public interface MultiplyGroup<T> extends Multipliable<T> {
 
-    T multiply(T o);
+    T revert();
 }

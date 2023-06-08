@@ -23,6 +23,10 @@ public class DegreeVariable implements Comparable<DegreeVariable>, Formatable { 
         this.variable = variable;
     }
 
+    public static DegreeVariable valueOfOne() {
+        return new DegreeVariable(null, 0);
+    }
+
     public Variable getVariable() {
         return variable;
     }

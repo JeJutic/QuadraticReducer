@@ -1,19 +1,19 @@
 package org.panart.parser;
 
-public class ParsedNext<T> {
-    private final T parsed;
-    private final int next;
+import java.util.Objects;
 
-    public ParsedNext(T parsed, int next) {
-        this.parsed = parsed;
-        this.next = next;
+public record ParsedNext<T>(T parsed, int next) {
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ParsedNext<?> that = (ParsedNext<?>) o;
+        return next == that.next && Objects.equals(parsed, that.parsed);
     }
 
-    public T getParsed() {
-        return parsed;
-    }
-
-    public int getNext() {
-        return next;
+    @Override
+    public int hashCode() {
+        return Objects.hash(parsed, next);
     }
 }

@@ -71,6 +71,17 @@ public class BasicTerm implements MultiplyGroup<BasicTerm>, Formatable, Comparab
     }
 
     @Override
+    public BasicTerm revert() {
+        List<DegreeVariable> newDegreeVariables = new ArrayList<>();
+        for (var degreeVariable : degreeVariables) {
+            newDegreeVariables.add(new DegreeVariable(
+                    degreeVariable.getVariable(), -degreeVariable.getDegree())
+            );
+        }
+        return new BasicTerm(newDegreeVariables);
+    }
+
+    @Override
     public String format() {
         return BasicTermFormatter.getInstance().format(this);
     }

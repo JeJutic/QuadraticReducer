@@ -2,7 +2,7 @@ package org.panart.parser;
 
 import java.text.ParseException;
 
-public abstract class BaseParser {
+public abstract class BasePartialParser<T> implements PartialParser<T> {
 
     protected ParsedNext<Integer> parseInt(String str, int start) throws ParseException {
         int end = start;

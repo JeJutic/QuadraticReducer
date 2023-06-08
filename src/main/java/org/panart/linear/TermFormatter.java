@@ -18,6 +18,6 @@ public class TermFormatter implements Formatter<Term> {
 
     @Override
     public String format(Term o) {
-        return String.format("%.2f", o.coef) + o.basicTerm.format();
+        return (o.coef == 1 ? "" : String.format("%.2f", o.coef)) + o.basicTerm.format();
     }
 }
