@@ -2,7 +2,7 @@ package org.panart.linear;
 
 import org.panart.formatting.Formatter;
 
-public class DegreeVariableFormatter implements Formatter<DegreeVariable> {
+class DegreeVariableFormatter implements Formatter<DegreeVariable> {
 
     private static DegreeVariableFormatter singleton;
     

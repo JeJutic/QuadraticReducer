@@ -4,7 +4,7 @@ import org.panart.formatting.Formatter;
 
 import java.util.List;
 
-public class PolynomialFormatter implements Formatter<Polynomial> {
+class PolynomialFormatter implements Formatter<Polynomial> {
 
     private static PolynomialFormatter singleton;
 
@@ -20,6 +20,9 @@ public class PolynomialFormatter implements Formatter<Polynomial> {
 
     @Override
     public String format(Polynomial o) {
+        if (o.isZero()) {
+            return "0";
+        }
         List<Term> terms = o.getTerms();
 
         StringBuilder sb = new StringBuilder();

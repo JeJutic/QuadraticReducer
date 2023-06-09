@@ -15,12 +15,26 @@ public class DegreeVariable implements Comparable<DegreeVariable>, Formatable { 
         setVariable(variable);
     }
 
+    public DegreeVariable(Variable variable) {
+        this(variable, 1);
+    }
+
     private void setVariable(Variable variable) {
-        if (variable == null ^ degree == 0) {   // number case
+        if (degree == 0) {
+            variable = null;
+        } else if (variable == null) {
             throw new IllegalArgumentException();
         }
 
         this.variable = variable;
+    }
+
+    public static DegreeVariable valueOfOne() {
+        return new DegreeVariable(null, 0);
+    }
+
+    public boolean isOne() {
+        return variable == null;
     }
 
     public Variable getVariable() {

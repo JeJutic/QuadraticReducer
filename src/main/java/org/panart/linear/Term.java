@@ -5,14 +5,18 @@ import org.panart.formatting.Formatable;
 import java.util.Comparator;
 import java.util.Objects;
 
-public class Term implements Algebra<Term>, Formatable, Comparable<Term> {
+public class Term implements TermInterface<Term>, Algebra<Term>, IsZero, Formatable {
 
     final double coef;
     BasicTerm basicTerm; // "final", package-private for formatter
 
-    public Term(BasicTerm basicTerm, double coef) {
+    public Term(double coef, BasicTerm basicTerm) {
         this.coef = coef;
         setBasicTerm(basicTerm);
+    }
+
+    public Term(BasicTerm basicTerm) {
+        this(1, basicTerm);
     }
 
     private void setBasicTerm(BasicTerm basicTerm) {
@@ -23,9 +27,31 @@ public class Term implements Algebra<Term>, Formatable, Comparable<Term> {
         this.basicTerm = basicTerm;
     }
 
+    public double getCoef() {
+        return coef;
+    }
+
+    @Override
+    public boolean isZero() {
+        return Math.abs(coef) < 1e-9;
+    }
+
+    @Override
+    public DegreeVariable getDegreeVariable(Variable variable) {
+        return basicTerm.getDegreeVariable(variable);
+    }
+
     @Override
     public Term multiply(Term o) {
-        return new Term(basicTerm.multiply(o.basicTerm), coef * o.coef);
+        return new Term(coef * o.coef, basicTerm.multiply(o.basicTerm));
+    }
+
+    @Override
+    public Term revert() {
+        if (isZero()) {
+            throw new ArithmeticException("Division by zero");
+        }
+        return new Term(1 / coef, basicTerm.revert());
     }
 
     @Override
@@ -34,12 +60,17 @@ public class Term implements Algebra<Term>, Formatable, Comparable<Term> {
             throw new IllegalArgumentException();
         }
 
-        return new Term(basicTerm, coef + o.coef);
+        return new Term(coef + o.coef, basicTerm);
     }
 
     @Override
     public Term lambda(double scalar) {
-        return new Term(basicTerm, coef * scalar);
+        return new Term(coef * scalar, basicTerm);
+    }
+
+    @Override
+    public boolean isQuadraticForm() {
+        return basicTerm.isQuadraticForm();
     }
 
     @Override
@@ -69,8 +100,8 @@ public class Term implements Algebra<Term>, Formatable, Comparable<Term> {
 
     @Override
     public int compareTo(Term o) {
-        return Comparator.comparing((Term term) -> term.basicTerm)
-                .thenComparing(term -> coef)
+        return Comparator.nullsFirst(Comparator.comparing((Term term) -> term.basicTerm)
+                .thenComparing(term -> coef))
                 .compare(this, o);
     }
 }
