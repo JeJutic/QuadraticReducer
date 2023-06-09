@@ -5,7 +5,7 @@ import org.panart.formatting.Formatable;
 import java.util.Comparator;
 import java.util.Objects;
 
-public class Term implements Algebra<Term>, MultiplyGroup<Term>, Formatable, Comparable<Term> {
+public class Term implements TermInterface<Term>, Algebra<Term>, IsZero, Formatable {
 
     final double coef;
     BasicTerm basicTerm; // "final", package-private for formatter
@@ -13,6 +13,10 @@ public class Term implements Algebra<Term>, MultiplyGroup<Term>, Formatable, Com
     public Term(BasicTerm basicTerm, double coef) {
         this.coef = coef;
         setBasicTerm(basicTerm);
+    }
+
+    public Term(BasicTerm basicTerm) {
+        this(basicTerm, 1);
     }
 
     private void setBasicTerm(BasicTerm basicTerm) {
@@ -23,6 +27,21 @@ public class Term implements Algebra<Term>, MultiplyGroup<Term>, Formatable, Com
         this.basicTerm = basicTerm;
     }
 
+    public double getCoef() {
+        return coef;
+    }
+
+    @Override
+    public boolean isZero() {
+//        return coef == 0;   // FIXME: double comparison
+        return Math.abs(coef) < 1e-9;
+    }
+
+    @Override
+    public DegreeVariable getDegreeVariable(Variable variable) {
+        return basicTerm.getDegreeVariable(variable);
+    }
+
     @Override
     public Term multiply(Term o) {
         return new Term(basicTerm.multiply(o.basicTerm), coef * o.coef);
@@ -30,6 +49,9 @@ public class Term implements Algebra<Term>, MultiplyGroup<Term>, Formatable, Com
 
     @Override
     public Term revert() {
+        if (isZero()) {
+            throw new ArithmeticException("Division by zero");
+        }
         return new Term(basicTerm.revert(), 1 / coef);
     }
 
@@ -45,6 +67,11 @@ public class Term implements Algebra<Term>, MultiplyGroup<Term>, Formatable, Com
     @Override
     public Term lambda(double scalar) {
         return new Term(basicTerm, coef * scalar);
+    }
+
+    @Override
+    public boolean isQuadraticForm() {
+        return basicTerm.isQuadraticForm();
     }
 
     @Override

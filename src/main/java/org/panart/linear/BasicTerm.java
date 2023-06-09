@@ -3,13 +3,19 @@ package org.panart.linear;
 import org.panart.formatting.Formatable;
 
 import java.util.*;
+import java.util.function.Predicate;
 
-public class BasicTerm implements MultiplyGroup<BasicTerm>, Formatable, Comparable<BasicTerm> {  // probably aggregate
+// probably aggregate
+public class BasicTerm implements TermInterface<BasicTerm>, Formatable {
 
     private List<DegreeVariable> degreeVariables; // final
 
     public BasicTerm(List<DegreeVariable> degreeVariables) {
         setDegreeVariables(degreeVariables);
+    }
+
+    public BasicTerm(DegreeVariable degreeVariable) {
+        this(List.of(degreeVariable));
     }
 
     private void setDegreeVariables(List<DegreeVariable> degreeVariables) {
@@ -22,7 +28,10 @@ public class BasicTerm implements MultiplyGroup<BasicTerm>, Formatable, Comparab
             }
         }
 
-        degreeVariables = new ArrayList<>(degreeVariables); // FIXME?: making it modifiable
+        degreeVariables = degreeVariables.stream().filter(
+                Predicate.not(DegreeVariable::isOne)
+        ).toList();   // it is immutable now
+        degreeVariables = new ArrayList<>(degreeVariables); // making it modifiable
         Collections.sort(degreeVariables);
 
         for (int i = 1; i < degreeVariables.size(); i++) {
@@ -38,6 +47,23 @@ public class BasicTerm implements MultiplyGroup<BasicTerm>, Formatable, Comparab
 
     List<DegreeVariable> getDegreeVariables() {   // package-private for formatter
         return degreeVariables;
+    }
+
+    @Override
+    public DegreeVariable getDegreeVariable(Variable variable) {
+        if (degreeVariables.isEmpty()) {
+            return new DegreeVariable(null, 0);
+        }
+
+        int pos = Collections.binarySearch(degreeVariables, new DegreeVariable(variable, Integer.MIN_VALUE));
+        if (pos < 0) {
+            pos = -pos - 1;
+        }
+        if (pos < degreeVariables.size() && degreeVariables.get(pos).getVariable().equals(variable)) {
+            return degreeVariables.get(pos);
+        } else {
+            return new DegreeVariable(null, 0);
+        }
     }
 
     @Override
@@ -79,6 +105,13 @@ public class BasicTerm implements MultiplyGroup<BasicTerm>, Formatable, Comparab
             );
         }
         return new BasicTerm(newDegreeVariables);
+    }
+
+    @Override
+    public boolean isQuadraticForm() {
+        return (degreeVariables.size() == 1 && degreeVariables.get(0).getDegree() == 2) ||
+                (degreeVariables.size() == 2 && degreeVariables.get(0).getDegree() == 1 &&
+                        degreeVariables.get(1).getDegree() == 1);
     }
 
     @Override

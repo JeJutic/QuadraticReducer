@@ -18,7 +18,7 @@ public class DegreeVariablePartialParser extends BasePartialParser<DegreeVariabl
         offset = idNext.next();
 
         int degree;
-        if (str.charAt(offset) == 'd') {
+        if (offset < str.length() && str.charAt(offset) == 'd') {
             offset++;
             var degreeNext = parseInt(str, offset);
             degree = degreeNext.parsed();

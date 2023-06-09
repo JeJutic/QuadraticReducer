@@ -19,7 +19,7 @@ public class PolynomialPartialParser extends BasePartialParser<Polynomial> imple
         List<Term> terms = new ArrayList<>();
         while (offset < str.length()) {
             var termNext = new TermPartialParser().parse(str, offset);
-            offset += termNext.next();
+            offset = termNext.next();
             terms.add(termNext.parsed());
             if (offset < str.length() && str.charAt(offset) != '+') {
                 throw exception("+ sign expected, not found", offset);

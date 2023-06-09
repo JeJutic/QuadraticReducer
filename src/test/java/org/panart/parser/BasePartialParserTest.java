@@ -2,8 +2,6 @@ package org.panart.parser;
 
 import org.junit.jupiter.api.Test;
 
-import java.text.ParseException;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class BasePartialParserTest {
@@ -25,7 +23,9 @@ class BasePartialParserTest {
                 () -> assertEquals(new ParsedNext<>(12, 3),
                         basePartialParser.parseInt("112", 1)),
                 () -> assertEquals(new ParsedNext<>(12, 3),
-                        basePartialParser.parseInt("112x", 1))
+                        basePartialParser.parseInt("112x", 1)),
+                () -> assertEquals(new ParsedNext<>(-12, 4),
+                        basePartialParser.parseInt("1-12x", 1))
         );
     }
 

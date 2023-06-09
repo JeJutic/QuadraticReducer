@@ -2,16 +2,19 @@ package org.panart.linear;
 
 import org.panart.formatting.Formatable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.function.Predicate;
 
-public class Polynomial implements Algebra<Polynomial>, Formatable {  // probably aggregate root
+public class Polynomial implements Algebra<Polynomial>, IsQuadraticForm, IsZero, Formatable {  // probably aggregate root
 
     private List<Term> terms;
 
     public Polynomial(List<Term> terms) {
         setTerms(terms);
+    }
+
+    public Polynomial(Term term) {
+        this(List.of(term));
     }
 
     private void setTerms(List<Term> terms) {
@@ -24,21 +27,19 @@ public class Polynomial implements Algebra<Polynomial>, Formatable {  // probabl
             }
         }
 
-        terms = new ArrayList<>(terms); // FIXME?
-
-        this.terms = terms;
+        this.terms = new ArrayList<>(terms);
         sortAndReduce();
     }
 
-    List<Term> getTerms() { // package-private for formatter
-        return terms;
+    public List<Term> getTerms() {
+        return Collections.unmodifiableList(terms);
     }
 
     private void sortAndReduce() {
+        Collections.sort(terms);
         if (terms.isEmpty()) {
             return;
         }
-        Collections.sort(terms);
 
         List<Term> newTerms = new ArrayList<>();
         Term curTerm = terms.get(0);
@@ -52,7 +53,12 @@ public class Polynomial implements Algebra<Polynomial>, Formatable {  // probabl
         }
         newTerms.add(curTerm);
 
-        terms = newTerms;
+        terms = newTerms.stream().filter(Predicate.not(Term::isZero)).toList();
+    }
+
+    @Override
+    public boolean isZero() {
+        return terms.isEmpty();
     }
 
     @Override
@@ -80,6 +86,11 @@ public class Polynomial implements Algebra<Polynomial>, Formatable {  // probabl
             }
         }
         return new Polynomial(newTerms);
+    }
+
+    @Override
+    public boolean isQuadraticForm() {
+        return terms.stream().allMatch(Term::isQuadraticForm);
     }
 
     @Override

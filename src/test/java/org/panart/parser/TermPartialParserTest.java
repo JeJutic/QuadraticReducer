@@ -6,6 +6,7 @@ import org.panart.linear.DegreeVariable;
 import org.panart.linear.Term;
 import org.panart.linear.Variable;
 
+import java.text.ParseException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class TermPartialParserTest {
 
     @Test
-    void parse() {
+    void parse() throws ParseException {
         Term t2xy2 = new Term(
                 new BasicTerm(
                         List.of(
@@ -26,5 +27,8 @@ class TermPartialParserTest {
                 () -> assertEquals(new ParsedNext<>(t2xy2, 10),
                         new TermPartialParser().parse("abc2x1x2d3z", 3))
         );
+        assertEquals(6, new TermPartialParser().parse(
+                "-6x1x3", 0
+        ).next());
     }
 }

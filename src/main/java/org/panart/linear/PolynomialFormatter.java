@@ -20,6 +20,9 @@ public class PolynomialFormatter implements Formatter<Polynomial> {
 
     @Override
     public String format(Polynomial o) {
+        if (o.isZero()) {
+            return "0";
+        }
         List<Term> terms = o.getTerms();
 
         StringBuilder sb = new StringBuilder();
@@ -33,3 +36,4 @@ public class PolynomialFormatter implements Formatter<Polynomial> {
         return sb.toString();
     }
 }
+// TODO?: make formatters package-private
