@@ -12,19 +12,19 @@ public class QuadraticReducerImpl implements QuadraticReducer {
         Term pivot = null;
         List<Term> newTerms = new ArrayList<>();
         for (Term term : polynomial.getTerms()) {
-            DegreeVariable degreeVariable = term.getDegreeVariable(variable);
+            DegreeVariable variableCntVariable = term.getDegreeVariable(variable);
             Term newTerm = term.multiply(
                     new Term(new BasicTerm(new DegreeVariable(variable))).revert()
             );
-            if (degreeVariable.getDegree() == 1) {
+            if (variableCntVariable.getDegree() == 1) {
                 newTerms.add(newTerm.lambda(0.5));
-            } else if (degreeVariable.getDegree() == 2) {
+            } else if (variableCntVariable.getDegree() == 2) {
                 pivot = newTerm;
             }
         }
         if (pivot == null) {
             return new Pair<>(
-                    new Pair<>(new Polynomial(new Term(new BasicTerm(new DegreeVariable(variable, 1)), 1)),
+                    new Pair<>(new Polynomial(new Term(new BasicTerm(new DegreeVariable(variable)))),
                             0),
                     polynomial
             );
@@ -39,25 +39,25 @@ public class QuadraticReducerImpl implements QuadraticReducer {
     }
 
     @Override
-    public Pair<List<Polynomial>, List<Integer>> reduce(Polynomial polynomial, int degree) {
+    public Pair<List<Polynomial>, List<Integer>> reduce(Polynomial polynomial, int variableCnt) {
         if (!polynomial.isQuadraticForm()) {
             throw new IllegalArgumentException("Polynomial isn't in a right form: " + polynomial.format());
         }
-        if (degree <= 1) {
-            throw new IllegalArgumentException("Can't deal with variable change");  // TODO
+        if (variableCnt <= 1) {
+            throw new IllegalArgumentException("Can't deal with this amount of variables");  // TODO
         }
 
         List<Polynomial> newVariables = new ArrayList<>();
         List<Integer> signs = new ArrayList<>();
-        for (int i = 1; i <= degree; i++) {
+        for (int i = 1; i <= variableCnt; i++) {
             var oneReduce = reduce(polynomial, new Variable(i));
             newVariables.add(oneReduce.first().first());
             signs.add(oneReduce.first().second());
             polynomial = oneReduce.second();
         }
-        System.out.println("Left part of polynomial: " + polynomial.format());
+
         if (!polynomial.isZero()) {
-            System.out.println("WARNING: Unable to fully solve the polynomial");
+            newVariables.add(polynomial);   // FIXME?
         }
         return new Pair<>(newVariables, signs);
     }

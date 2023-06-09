@@ -10,13 +10,13 @@ public class Term implements TermInterface<Term>, Algebra<Term>, IsZero, Formata
     final double coef;
     BasicTerm basicTerm; // "final", package-private for formatter
 
-    public Term(BasicTerm basicTerm, double coef) {
+    public Term(double coef, BasicTerm basicTerm) {
         this.coef = coef;
         setBasicTerm(basicTerm);
     }
 
     public Term(BasicTerm basicTerm) {
-        this(basicTerm, 1);
+        this(1, basicTerm);
     }
 
     private void setBasicTerm(BasicTerm basicTerm) {
@@ -33,7 +33,6 @@ public class Term implements TermInterface<Term>, Algebra<Term>, IsZero, Formata
 
     @Override
     public boolean isZero() {
-//        return coef == 0;   // FIXME: double comparison
         return Math.abs(coef) < 1e-9;
     }
 
@@ -44,7 +43,7 @@ public class Term implements TermInterface<Term>, Algebra<Term>, IsZero, Formata
 
     @Override
     public Term multiply(Term o) {
-        return new Term(basicTerm.multiply(o.basicTerm), coef * o.coef);
+        return new Term(coef * o.coef, basicTerm.multiply(o.basicTerm));
     }
 
     @Override
@@ -52,7 +51,7 @@ public class Term implements TermInterface<Term>, Algebra<Term>, IsZero, Formata
         if (isZero()) {
             throw new ArithmeticException("Division by zero");
         }
-        return new Term(basicTerm.revert(), 1 / coef);
+        return new Term(1 / coef, basicTerm.revert());
     }
 
     @Override
@@ -61,12 +60,12 @@ public class Term implements TermInterface<Term>, Algebra<Term>, IsZero, Formata
             throw new IllegalArgumentException();
         }
 
-        return new Term(basicTerm, coef + o.coef);
+        return new Term(coef + o.coef, basicTerm);
     }
 
     @Override
     public Term lambda(double scalar) {
-        return new Term(basicTerm, coef * scalar);
+        return new Term(coef * scalar, basicTerm);
     }
 
     @Override
@@ -101,8 +100,8 @@ public class Term implements TermInterface<Term>, Algebra<Term>, IsZero, Formata
 
     @Override
     public int compareTo(Term o) {
-        return Comparator.comparing((Term term) -> term.basicTerm)
-                .thenComparing(term -> coef)
+        return Comparator.nullsFirst(Comparator.comparing((Term term) -> term.basicTerm)
+                .thenComparing(term -> coef))
                 .compare(this, o);
     }
 }

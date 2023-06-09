@@ -49,6 +49,10 @@ public class BasicTerm implements TermInterface<BasicTerm>, Formatable {
         return degreeVariables;
     }
 
+    public static BasicTerm valueOfOne() {
+        return new BasicTerm(List.of());
+    }
+
     @Override
     public DegreeVariable getDegreeVariable(Variable variable) {
         if (degreeVariables.isEmpty()) {

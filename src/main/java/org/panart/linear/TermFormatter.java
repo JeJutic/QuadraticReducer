@@ -2,7 +2,7 @@ package org.panart.linear;
 
 import org.panart.formatting.Formatter;
 
-public class TermFormatter implements Formatter<Term> {
+class TermFormatter implements Formatter<Term> {
 
     private static TermFormatter singleton;
 

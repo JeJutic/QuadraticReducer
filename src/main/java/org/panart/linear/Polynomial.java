@@ -97,4 +97,17 @@ public class Polynomial implements Algebra<Polynomial>, IsQuadraticForm, IsZero,
     public String format() {
         return PolynomialFormatter.getInstance().format(this);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Polynomial that = (Polynomial) o;
+        return terms.equals(that.terms);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(terms);
+    }
 }

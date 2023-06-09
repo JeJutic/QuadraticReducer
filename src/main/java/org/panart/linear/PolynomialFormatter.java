@@ -4,7 +4,7 @@ import org.panart.formatting.Formatter;
 
 import java.util.List;
 
-public class PolynomialFormatter implements Formatter<Polynomial> {
+class PolynomialFormatter implements Formatter<Polynomial> {
 
     private static PolynomialFormatter singleton;
 
@@ -36,4 +36,3 @@ public class PolynomialFormatter implements Formatter<Polynomial> {
         return sb.toString();
     }
 }
-// TODO?: make formatters package-private

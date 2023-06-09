@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface QuadraticReducer {
 
-    Pair<List<Polynomial>, List<Integer>> reduce(Polynomial polynomial, int degree);
+    Pair<List<Polynomial>, List<Integer>> reduce(Polynomial polynomial, int variableCnt);
 }

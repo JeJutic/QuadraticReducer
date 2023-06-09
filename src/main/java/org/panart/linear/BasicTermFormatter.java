@@ -4,7 +4,7 @@ import org.panart.formatting.Formatter;
 
 import java.util.List;
 
-public class BasicTermFormatter implements Formatter<BasicTerm> {
+class BasicTermFormatter implements Formatter<BasicTerm> {
 
     private static BasicTermFormatter singleton;
 

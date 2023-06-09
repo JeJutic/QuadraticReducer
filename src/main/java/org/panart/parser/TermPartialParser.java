@@ -1,5 +1,6 @@
 package org.panart.parser;
 
+import org.panart.linear.BasicTerm;
 import org.panart.linear.Term;
 
 import java.text.ParseException;
@@ -18,9 +19,15 @@ public class TermPartialParser extends BasePartialParser<Term> {
             coef = coefNext.parsed();
         }
 
-        var basicTermNext = new BasicTermPartialParser().parse(str, offset);
-        offset = basicTermNext.next();
+        BasicTerm basicTerm;
+        if (offset < str.length() && str.charAt(offset) == 'x') {
+            var basicTermNext = new BasicTermPartialParser().parse(str, offset);
+            offset = basicTermNext.next();
+            basicTerm = basicTermNext.parsed();
+        } else {
+            basicTerm = BasicTerm.valueOfOne();
+        }
 
-        return new ParsedNext<>(new Term(basicTermNext.parsed(), coef), offset);
+        return new ParsedNext<>(new Term(coef, basicTerm), offset);
     }
 }
