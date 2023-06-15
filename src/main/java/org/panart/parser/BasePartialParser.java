@@ -10,9 +10,16 @@ public abstract class BasePartialParser<T> implements PartialParser<T> {
             end++;
         }
         if (start == end) {
-            throw new ParseException("No int found", start);
+            throw exception("No int found", start);
         }
-        return new ParsedNext<>(Integer.parseInt(str.substring(start, end)), end);
+
+        int res;
+        try {
+            res = Integer.parseInt(str.substring(start, end));
+        } catch (NumberFormatException e) {
+            throw exception(e.getMessage(), start);
+        }
+        return new ParsedNext<>(res, end);
     }
 
     protected ParseException exception(String s, int offset) {
