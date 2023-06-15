@@ -4,5 +4,5 @@ import java.text.ParseException;
 
 public interface PartialParser<T> {
 
-    ParsedNext<T> parse(String str, int offset) throws ParseException;
+    ParsedNext<? extends T> parse(String str, int offset) throws ParseException;
 }

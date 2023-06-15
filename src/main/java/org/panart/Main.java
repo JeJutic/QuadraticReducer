@@ -8,9 +8,13 @@ public class Main {
 
     public static void main(String[] args) {
 
-        new QuadraticReducerClient(
-                new QuadraticReducerImpl(), new PolynomialPartialParser(),
-                "-input"
-        ).run(args);
+        try {
+            new QuadraticReducerClient(
+                    new QuadraticReducerImpl(), new PolynomialPartialParser(),
+                    "-input"
+            ).run(args);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Wrong input: " + e.getMessage());
+        }
     }
 }
